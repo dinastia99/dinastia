@@ -419,35 +419,30 @@ function defTar() {
 }
 
 // ═══════════════════════════════════════════════════
-// GOOGLE SHEETS SYNC — datos compartidos entre todos
+// SINCRONIZACIÓN via Google Apps Script
 // ═══════════════════════════════════════════════════
-var SHEET_ID  = '1X1h6CFUCN2UPKN1kcHQAN261fcuy9R6pxIgOflFIZMk';
-var API_KEY   = 'AIzaSyDm_7ToeiE-WHzkWM2g9gCTlzOr8hW8oxY';
-var SHEET_TAB = 'Datos';
-var SHEETS_BASE = 'https://sheets.googleapis.com/v4/spreadsheets/';
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxc2boT15a0pCvkOHeIpwh26P0YsccYzAGZMEg-XtDbB0tFuAXjZDylDQlEhA12SPV_RA/exec';
 
 function setSyncMsg(msg, color) {
   var el = document.getElementById('saveInd');
   if(el) { el.textContent = msg; el.style.color = color||''; }
 }
 
-// Lee desde Sheets
 function loadFromSheets(cb) {
-  setSyncMsg('⟳ Cargando datos compartidos…', '#e8c547');
-  var url = SHEETS_BASE + SHEET_ID + '/values/' + SHEET_TAB + '!A1?key=' + API_KEY;
-  fetch(url)
-    .then(function(r){ return r.json(); })
-    .then(function(data) {
-      if(data.values && data.values[0] && data.values[0][0]) {
+  setSyncMsg('⟳ Sincronizando…', '#e8c547');
+  fetch(SCRIPT_URL)
+    .then(function(r){ return r.text(); })
+    .then(function(text) {
+      if(text && text.trim() && text.trim() !== 'null' && text.trim() !== '') {
         try {
-          var stored = JSON.parse(data.values[0][0]);
+          var stored = JSON.parse(text);
           if(stored.plan)      plan      = stored.plan;
           if(stored.tarifario) tarifario = stored.tarifario;
           if(stored.fixture)   localStorage.setItem('din_fixture', JSON.stringify(stored.fixture));
-          setSyncMsg('✓ Datos sincronizados', '#5dca9f');
-        } catch(e) { setSyncMsg('✓ Listo (datos nuevos)', '#5dca9f'); }
+          setSyncMsg('✓ Sincronizado', '#5dca9f');
+        } catch(e) { setSyncMsg('✓ Listo', '#5dca9f'); }
       } else {
-        setSyncMsg('✓ Listo (hoja vacía — primera vez)', '#5dca9f');
+        setSyncMsg('✓ Listo (primera vez)', '#5dca9f');
       }
       CLIENTES.forEach(function(c) {
         if(!tarifario[c]) tarifario[c]={filmacion:0,streaming:0,analisis:0,charla:0,extras:[]};
@@ -456,9 +451,8 @@ function loadFromSheets(cb) {
       if(!localStorage.getItem('din_fixture')) localStorage.setItem('din_fixture', JSON.stringify(FIXTURE));
       if(cb) cb();
     })
-    .catch(function(err) {
-      setSyncMsg('⚠ Sin conexión — usando datos locales', '#ff6b4a');
-      // fallback a localStorage
+    .catch(function() {
+      setSyncMsg('⚠ Sin conexión — datos locales', '#ff6b4a');
       var rp = localStorage.getItem('din_plan');
       if(rp) { try { plan = JSON.parse(rp); } catch(e) {} }
       var rt = localStorage.getItem('din_tar2');
@@ -472,13 +466,11 @@ function loadFromSheets(cb) {
     });
 }
 
-// Escribe en Sheets usando el endpoint público (requiere que el sheet sea Editor público)
 var saveT = null;
 function qSave() {
-  // Guardar localmente inmediato como backup
   localStorage.setItem('din_plan', JSON.stringify(plan));
   localStorage.setItem('din_tar2', JSON.stringify(tarifario));
-  setSyncMsg('… guardando en Drive', '#e8c547');
+  setSyncMsg('… guardando', '#e8c547');
   clearTimeout(saveT);
   saveT = setTimeout(saveToSheets, 1000);
 }
@@ -486,48 +478,24 @@ function qSave() {
 function saveToSheets() {
   var fixtureData = null;
   try { fixtureData = JSON.parse(localStorage.getItem('din_fixture')||'null'); } catch(e) {}
-  var payload = JSON.stringify({
-    plan: plan,
-    tarifario: tarifario,
-    fixture: fixtureData,
-    lastSaved: new Date().toISOString(),
-    savedBy: 'dinastia-app'
-  });
-
-  // Escapar para JSON en Sheets (comillas dobles)
-  var escaped = payload.replace(/"/g, '""');
-  var body = JSON.stringify({
-    values: [[payload]]
-  });
-
-  var url = SHEETS_BASE + SHEET_ID + '/values/' + SHEET_TAB + '!A1?valueInputOption=RAW&key=' + API_KEY;
-
-  fetch(url, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: body
+  var payload = { plan:plan, tarifario:tarifario, fixture:fixtureData, lastSaved:new Date().toISOString() };
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
   })
-  .then(function(r) {
-    if(r.ok) {
-      var h = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-      setSyncMsg('✓ Guardado en Drive ' + h, '#5dca9f');
-    } else {
-      return r.json().then(function(e) {
-        // Si falla por auth, intentar con el endpoint de apps script si está disponible
-        setSyncMsg('⚠ Guardado local (Drive: permisos)', '#ff6b4a');
-        console.warn('Sheets error:', e);
-      });
-    }
+  .then(function(r){ return r.text(); })
+  .then(function() {
+    var h = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+    setSyncMsg('✓ Guardado ' + h, '#5dca9f');
   })
   .catch(function() {
     setSyncMsg('⚠ Guardado local (sin red)', '#ff6b4a');
   });
 }
 
-// Recargar datos desde Sheets periódicamente (cada 30 seg)
+// Recargar cada 30 seg
 setInterval(function() {
   loadFromSheets(function() {
-    // Solo re-renderizar si hay cambios (simple: siempre re-render silencioso)
     if(document.getElementById('pg-plan').classList.contains('on')) renderPlan();
   });
 }, 30000);
