@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dinastia — Juveniles</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#040430; --s1:#060635; --s2:#08084a; --s3:#0d0d60;
+  --b1:rgba(255,255,255,.09); --b2:rgba(255,255,255,.18);
+  --acc:#e8c547; --blu:#4a9eff; --grn:#5dca9f; --red:#ff6b4a; --pur:#c084fc;
+  --t1:#ffffff; --t2:rgba(255,255,255,.6); --t3:rgba(255,255,255,.3); --r:8px; --rl:12px;
+  --gradient-brand: linear-gradient(90deg, #060635 50%, #04015D 50%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Barlow Condensed',sans-serif;font-size:15px;line-height:1.5;min-height:100vh;}
+
+.nav{background:var(--gradient-brand);border-bottom:1px solid var(--b1);padding:0 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Oswald',sans-serif;font-size:22px;letter-spacing:3px;color:var(--acc);padding:13px 0;font-weight:700;font-style:italic;text-transform:uppercase;}
+.logo-sub{font-size:9px;color:var(--t2);letter-spacing:1px;text-transform:uppercase;}
+.save-ind{margin-left:auto;font-size:11px;color:var(--t3);}
+
+.wrap{padding:20px;max-width:900px;margin:0 auto;}
+h1{font-family:'Oswald',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:4px;color:var(--pur);}
+.sub{font-size:12px;color:var(--t2);margin-bottom:20px;}
+
+/* MONTH BAR */
+.mbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+.mbtn{padding:6px 13px;border:1px solid var(--b1);border-radius:14px;background:transparent;color:var(--t2);font-size:12px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;}
+.mbtn.on{background:var(--pur);border-color:var(--pur);color:#000;font-weight:600;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:20px;}
+.sc{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;}
+.sc-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.sc-v{font-family:'Oswald',sans-serif;font-size:26px;letter-spacing:1px;}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:20px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;}
+.tab{flex:1;padding:10px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;transition:all .15s;}
+.tab:hover{background:var(--s3);}
+.tab.on.film{background:rgba(74,158,255,.15);color:#4a9eff;}
+.tab.on.anal{background:rgba(93,202,159,.15);color:#5dca9f;}
+.tab.on.fact{background:rgba(192,132,252,.15);color:#c084fc;}
+
+/* TARIFAS */
+.tar-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px;margin-bottom:18px;}
+.tar-title{font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.tar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.tar-lbl{font-size:13px;flex:1;}
+.tar-input{background:var(--s3);border:1px solid var(--b1);color:var(--t1);font-size:13px;padding:6px 10px;border-radius:var(--r);width:120px;font-family:'Barlow Condensed',sans-serif;outline:none;text-align:right;}
+.tar-input:focus{border-color:var(--b2);}
+
+/* ADD FORM */
+.form-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:16px;margin-bottom:18px;}
+.form-title{font-size:13px;font-weight:600;margin-bottom:12px;color:var(--t1);}
+.addrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.addrow select,.addrow input{background:var(--s2);border:1px solid var(--b1);color:var(--t1);font-size:12px;padding:6px 9px;border-radius:var(--r);font-family:'Barlow Condensed',sans-serif;outline:none;}
+.addrow select{cursor:pointer;}
+.abtn{background:var(--pur);color:#000;border:none;padding:7px 16px;border-radius:var(--r);font-size:12px;font-weight:700;cursor:pointer;font-family:'Barlow Condensed',sans-serif;}
+.abtn:hover{opacity:.85;}
+
+/* TABLE */
+.jt{width:100%;border-collapse:collapse;font-size:12px;}
+.jt th{color:var(--t3);font-size:10px;text-transform:uppercase;letter-spacing:.4px;padding:5px 8px;text-align:left;border-bottom:1px solid var(--b1);font-weight:500;}
+.jt td{padding:7px 8px;border-bottom:1px solid var(--b1);color:var(--t1);vertical-align:middle;}
+.jt tr:last-child td{border-bottom:none;}
+.jt tr:hover td{background:var(--s2);}
+.tag{display:inline-block;font-size:10px;padding:2px 6px;border-radius:5px;font-weight:600;}
+.tag.film{background:rgba(74,158,255,.15);color:#4a9eff;}
+.tag.anal{background:rgba(93,202,159,.15);color:#5dca9f;}
+.delbtn{background:none;border:none;cursor:pointer;color:var(--t3);font-size:15px;padding:0 3px;}
+.delbtn:hover{color:var(--red);}
+.empty{font-size:12px;color:var(--t3);text-align:center;padding:18px;}
+
+/* FACTURA PREVIEW */
+.fact-wrap{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);overflow:hidden;}
+.fact-header{background:var(--s2);padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--b1);}
+.fact-badge{width:42px;height:42px;border-radius:10px;background:rgba(192,132,252,.2);color:#c084fc;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:15px;}
+.fact-total{font-family:'Oswald',sans-serif;font-size:32px;letter-spacing:1px;color:#c084fc;margin-left:auto;}
+.fact-body{padding:16px 20px;}
+.fact-section{margin-bottom:16px;}
+.fact-sec-title{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.fact-sec-lbl{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:700;}
+.fact-sec-sub{font-size:12px;color:var(--t3);margin-left:auto;}
+.fact-row{display:flex;align-items:center;padding:5px 0;border-bottom:1px solid var(--b1);font-size:12px;}
+.fact-row:last-child{border-bottom:none;}
+.fact-row-det{flex:1;color:var(--t2);}
+.fact-row-val{font-weight:600;color:var(--grn);white-space:nowrap;}
+.fact-footer{background:var(--s2);padding:12px 20px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--b1);}
+.btn-pdf{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:'Barlow Condensed',sans-serif;}
+.btn-pdf:hover{opacity:.85;}
+
+/* CLIENTES SELECTOR */
+.cli-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:16px;}
+.cli-btn{padding:8px 12px;border:2px solid var(--b1);border-radius:var(--r);background:transparent;color:var(--t2);font-size:13px;font-weight:500;cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-align:center;}
+.cli-btn.on{border-color:var(--pur);background:rgba(192,132,252,.1);color:#c084fc;font-weight:700;}
+
+@media print{
+  @page{size:A4;margin:14mm;}
+  body{background:#fff!important;color:#111!important;}
+  .nav,.mbar,.tabs,.form-card,.tar-card,.fact-footer,.cli-grid,.stats{display:none!important;}
+  .fact-wrap{border:1px solid #ddd!important;background:#fff!important;}
+  .fact-header{background:#f5f5f5!important;}
+  .fact-header *,.fact-body *,.fact-footer *{color:#111!important;}
+  .fact-row-val{color:#000!important;}
+  .print-header{display:block!important;}
+  #print-area{display:block!important;}
+}
+.print-header{display:none;}
+#print-area{display:none;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">DINASTIA</div>
+  <div class="logo-sub">Módulo Juveniles</div>
+  <div class="save-ind" id="saveInd">✓ Listo</div>
+</nav>
+
+<div class="wrap">
+  <h1>Juveniles 2026</h1>
+  <p class="sub">Filmaciones y análisis de divisiones juveniles — independiente del planificador principal</p>
+
+  <!-- Tarifas -->
+  <div class="tar-card">
+    <div class="tar-title">⚙️ Tarifas Juveniles (se guardan automáticamente)</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+      <div class="tar-row">
+        <span class="tar-lbl">🎬 Filmación</span>
+        <input class="tar-input" type="number" id="tar-film" placeholder="0" oninput="saveTar()"> <span style="font-size:11px;color:var(--t3)">$</span>
+      </div>
+      <div class="tar-row">
+        <span class="tar-lbl">🔍 Análisis</span>
+        <input class="tar-input" type="number" id="tar-anal" placeholder="0" oninput="saveTar()"> <span style="font-size:11px;color:var(--t3)">$</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Month bar -->
+  <div class="mbar" id="mbar"></div>
+
+  <!-- Stats -->
+  <div class="stats" id="stats"></div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab film on" id="tab-film" onclick="showTab('film')">🎬 Filmación</button>
+    <button class="tab anal" id="tab-anal" onclick="showTab('anal')">🔍 Análisis</button>
+    <button class="tab fact" id="tab-fact" onclick="showTab('fact')">🧾 Factura</button>
+  </div>
+
+  <!-- FILMACION -->
+  <div id="sec-film">
+    <div class="form-card">
+      <div class="form-title">+ Agregar filmación</div>
+      <div class="addrow">
+        <input type="text" id="f-cli" placeholder="Cliente / Club" style="min-width:150px" list="cli-list">
+        <datalist id="cli-list"></datalist>
+        <input type="text" id="f-cat" placeholder="Categoría (M18, M16…)" style="min-width:130px">
+        <input type="text" id="f-lugar" placeholder="Lugar" style="min-width:130px">
+        <input type="date" id="f-fecha" style="width:140px">
+        <input type="time" id="f-hora" value="10:00" style="width:90px" title="Hora (formato 24hs)">
+        <button class="abtn" onclick="addFilm()">+ Agregar</button>
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="form-title">Filmaciones — <span id="film-mes-lbl"></span></div>
+      <table class="jt">
+        <thead><tr><th></th><th>Cliente</th><th>Categoría</th><th>Lugar</th><th>Fecha</th><th>Hora</th><th>Tarifa</th><th></th></tr></thead>
+        <tbody id="film-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ANALISIS -->
+  <div id="sec-anal" style="display:none">
+    <div class="form-card">
+      <div class="form-title">+ Agregar análisis</div>
+      <div class="addrow">
+        <input type="text" id="a-cli" placeholder="Cliente / Club" style="min-width:150px" list="cli-list2">
+        <datalist id="cli-list2"></datalist>
+        <input type="text" id="a-cat" placeholder="Categoría" style="min-width:120px">
+        <input type="text" id="a-local" placeholder="Local" style="min-width:120px">
+        <input type="text" id="a-vis" placeholder="Visitante" style="min-width:120px">
+        <input type="date" id="a-fp" title="Fecha del partido" style="width:140px">
+        <input type="date" id="a-ent" title="Fecha de entrega" style="width:140px">
+        <button class="abtn" onclick="addAnal()">+ Agregar</button>
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="form-title">Análisis — <span id="anal-mes-lbl"></span></div>
+      <table class="jt">
+        <thead><tr><th></th><th>Cliente</th><th>Categoría</th><th>Local</th><th>Visitante</th><th>F. Partido</th><th>Entrega</th><th>Tarifa</th><th></th></tr></thead>
+        <tbody id="anal-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FACTURA -->
+  <div id="sec-fact" style="display:none">
+    <div class="form-card">
+      <div class="form-title">Seleccioná el cliente para generar la factura</div>
+      <div class="cli-grid" id="cli-grid"></div>
+    </div>
+    <div id="fact-preview"></div>
+  </div>
+</div>
+
+<div id="print-area"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// CONSTANTES
+// ═══════════════════════════════════════════
+var MESES = {3:'Marzo',4:'Abril',5:'Mayo',6:'Junio',7:'Julio',8:'Agosto',9:'Septiembre',10:'Octubre',11:'Noviembre',12:'Diciembre'};
+var mesActual = new Date().getMonth() + 1;
+var mes = mesActual in MESES ? mesActual : 4;
+var activeTab = 'film';
+var facturaCli = null;
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+var data = {}; // { "4": { film:[], anal:[] }, ... }
+var tar  = { film: 0, anal: 0 };
+
+function getMes(m) {
+  if(!data[m]) data[m] = {film:[], anal:[]};
+  return data[m];
+}
+
+// ═══════════════════════════════════════════
+// PERSIST (localStorage independiente)
+// ═══════════════════════════════════════════
+function loadAll() {
+  try { data = JSON.parse(localStorage.getItem('juv_data')||'{}'); } catch(e){ data={}; }
+  try { tar  = JSON.parse(localStorage.getItem('juv_tar') ||'{"film":0,"anal":0}'); } catch(e){ tar={film:0,anal:0}; }
+  document.getElementById('tar-film').value = tar.film||'';
+  document.getElementById('tar-anal').value = tar.anal||'';
+}
+
+var saveT = null;
+function qSave() {
+  document.getElementById('saveInd').textContent = '… guardando';
+  clearTimeout(saveT);
+  saveT = setTimeout(function(){
+    localStorage.setItem('juv_data', JSON.stringify(data));
+    localStorage.setItem('juv_tar',  JSON.stringify(tar));
+    var h = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
+    document.getElementById('saveInd').textContent = '✓ Guardado '+h;
+  }, 600);
+}
+
+function saveTar() {
+  tar.film = parseFloat(document.getElementById('tar-film').value)||0;
+  tar.anal = parseFloat(document.getElementById('tar-anal').value)||0;
+  qSave();
+}
+
+// ═══════════════════════════════════════════
+// NAV / TABS
+// ═══════════════════════════════════════════
+function buildMbar() {
+  var el = document.getElementById('mbar'); el.innerHTML = '';
+  Object.keys(MESES).forEach(function(m){
+    var b = document.createElement('button');
+    b.className = 'mbtn'+(parseInt(m)===mes?' on':'');
+    b.textContent = MESES[m];
+    b.onclick = (function(mm){return function(){ mes=mm; render(); };})(parseInt(m));
+    el.appendChild(b);
+  });
+}
+
+function showTab(t) {
+  activeTab = t;
+  ['film','anal','fact'].forEach(function(id){
+    document.getElementById('sec-'+id).style.display = id===t?'block':'none';
+    var btn = document.getElementById('tab-'+id);
+    btn.classList.remove('on');
+    if(id===t) btn.classList.add('on');
+  });
+  if(t==='fact') renderFacturasClientes();
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function $P(n){ return '$'+Math.round(n||0).toLocaleString('es-AR'); }
+
+function allClients() {
+  var set = {};
+  Object.keys(data).forEach(function(m){
+    (data[m].film||[]).forEach(function(j){ if(j.cli) set[j.cli]=1; });
+    (data[m].anal||[]).forEach(function(j){ if(j.cli) set[j.cli]=1; });
+  });
+  return Object.keys(set).sort();
+}
+
+function updateDatalist() {
+  var clis = allClients();
+  ['cli-list','cli-list2'].forEach(function(id){
+    var dl = document.getElementById(id);
+    if(dl){ dl.innerHTML=''; clis.forEach(function(c){ var o=document.createElement('option'); o.value=c; dl.appendChild(o); }); }
+  });
+}
+
+// ═══════════════════════════════════════════
+// ADD / DELETE
+// ═══════════════════════════════════════════
+function addFilm() {
+  var cli = document.getElementById('f-cli').value.trim().toUpperCase(); if(!cli){alert('Ingresá el cliente');return;}
+  var cat = document.getElementById('f-cat').value.trim();
+  var lugar = document.getElementById('f-lugar').value.trim();
+  var fecha = document.getElementById('f-fecha').value;
+  var hora  = document.getElementById('f-hora').value;
+  getMes(mes).film.push({cli:cli, cat:cat, lugar:lugar, fecha:fecha, hora:hora, tarifa:tar.film});
+  qSave(); render(); updateDatalist();
+}
+
+function addAnal() {
+  var cli = document.getElementById('a-cli').value.trim().toUpperCase(); if(!cli){alert('Ingresá el cliente');return;}
+  var cat = document.getElementById('a-cat').value.trim();
+  var loc = document.getElementById('a-local').value.trim();
+  var vis = document.getElementById('a-vis').value.trim();
+  var fp  = document.getElementById('a-fp').value;
+  var ent = document.getElementById('a-ent').value;
+  getMes(mes).anal.push({cli:cli, cat:cat, local:loc, vis:vis, fechaP:fp, entrega:ent, tarifa:tar.anal});
+  qSave(); render(); updateDatalist();
+}
+
+function delItem(tipo, idx) {
+  getMes(mes)[tipo].splice(idx,1);
+  qSave(); render();
+}
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+function render() {
+  buildMbar();
+  var d = getMes(mes);
+  var nF = d.film.length, nA = d.anal.length;
+  var totalF = d.film.reduce(function(s,j){return s+(j.tarifa||0);},0);
+  var totalA = d.anal.reduce(function(s,j){return s+(j.tarifa||0);},0);
+
+  document.getElementById('stats').innerHTML =
+    '<div class="sc"><div class="sc-l">Filmaciones</div><div class="sc-v" style="color:#4a9eff">'+nF+'</div></div>'+
+    '<div class="sc"><div class="sc-l">Análisis</div><div class="sc-v" style="color:#5dca9f">'+nA+'</div></div>'+
+    '<div class="sc"><div class="sc-l">Total</div><div class="sc-v" style="color:#c084fc">'+$P(totalF+totalA)+'</div></div>';
+
+  var mLbl = (MESES[mes]||'') + ' 2026';
+  document.getElementById('film-mes-lbl').textContent = mLbl;
+  document.getElementById('anal-mes-lbl').textContent = mLbl;
+
+  // Film table
+  var fRows = d.film.length ? d.film.map(function(j,i){
+    return '<tr><td><span class="tag film">FILM</span></td>'+
+      '<td>'+j.cli+'</td>'+
+      '<td style="color:var(--t2)">'+(j.cat||'—')+'</td>'+
+      '<td>'+(j.lugar||'—')+'</td>'+
+      '<td>'+(j.fecha||'—')+'</td>'+
+      '<td>'+(j.hora||'—')+'</td>'+
+      '<td style="color:var(--grn)">'+$P(j.tarifa)+'</td>'+
+      '<td><button class="delbtn" onclick="delItem(\'film\','+i+')">×</button></td></tr>';
+  }).join('') : '<tr><td colspan="8"><div class="empty">Sin filmaciones este mes</div></td></tr>';
+  document.getElementById('film-body').innerHTML = fRows;
+
+  // Anal table
+  var aRows = d.anal.length ? d.anal.map(function(j,i){
+    return '<tr><td><span class="tag anal">ANAL</span></td>'+
+      '<td>'+j.cli+'</td>'+
+      '<td style="color:var(--t2)">'+(j.cat||'—')+'</td>'+
+      '<td>'+(j.local||'—')+'</td>'+
+      '<td>'+(j.vis||'—')+'</td>'+
+      '<td>'+(j.fechaP||'—')+'</td>'+
+      '<td>'+(j.entrega||'—')+'</td>'+
+      '<td style="color:var(--grn)">'+$P(j.tarifa)+'</td>'+
+      '<td><button class="delbtn" onclick="delItem(\'anal\','+i+')">×</button></td></tr>';
+  }).join('') : '<tr><td colspan="9"><div class="empty">Sin análisis este mes</div></td></tr>';
+  document.getElementById('anal-body').innerHTML = aRows;
+
+  if(activeTab === 'fact') renderFacturasClientes();
+}
+
+// ═══════════════════════════════════════════
+// FACTURA
+// ═══════════════════════════════════════════
+function renderFacturasClientes() {
+  var clis = allClients();
+  // también incluir los del mes actual
+  var d = getMes(mes);
+  var mesSet = {};
+  d.film.forEach(function(j){ if(j.cli) mesSet[j.cli]=1; });
+  d.anal.forEach(function(j){ if(j.cli) mesSet[j.cli]=1; });
+  var mesClis = Object.keys(mesSet).sort();
+
+  var grid = document.getElementById('cli-grid');
+  if(!mesClis.length){
+    grid.innerHTML = '<p style="color:var(--t3);font-size:12px">No hay clientes con trabajos en '+MESES[mes]+'</p>';
+    document.getElementById('fact-preview').innerHTML = '';
+    return;
+  }
+  grid.innerHTML = mesClis.map(function(c){
+    return '<button class="cli-btn'+(facturaCli===c?' on':'')+'" onclick="selCli(\''+c+'\')">'+c+'</button>';
+  }).join('');
+
+  if(!facturaCli || !mesSet[facturaCli]) {
+    facturaCli = mesClis[0];
+    // refresh buttons
+    grid.querySelectorAll('.cli-btn').forEach(function(b){
+      b.classList.toggle('on', b.textContent === facturaCli);
+    });
+  }
+  renderFactura(facturaCli);
+}
+
+function selCli(c) {
+  facturaCli = c;
+  document.querySelectorAll('.cli-btn').forEach(function(b){
+    b.classList.toggle('on', b.textContent === c);
+  });
+  renderFactura(c);
+}
+
+function renderFactura(cli) {
+  var d  = getMes(mes);
+  var films = d.film.filter(function(j){return j.cli===cli;});
+  var anals = d.anal.filter(function(j){return j.cli===cli;});
+  var total = 0;
+  films.forEach(function(j){total+=j.tarifa||0;});
+  anals.forEach(function(j){total+=j.tarifa||0;});
+
+  var filmRows = films.map(function(j){
+    return '<div class="fact-row">'+
+      '<span class="fact-row-det">'+(j.cat||'')+(j.lugar?' · '+j.lugar:'')+(j.fecha?' · '+j.fecha:'')+'</span>'+
+      '<span class="fact-row-val">'+$P(j.tarifa)+'</span></div>';
+  }).join('');
+
+  var analRows = anals.map(function(j){
+    var det = (j.cat||'')+(j.local?' · '+j.local+' vs '+(j.vis||'—'):'')+(j.fechaP?' · '+j.fechaP:'');
+    return '<div class="fact-row">'+
+      '<span class="fact-row-det">'+det+'</span>'+
+      '<span class="fact-row-val">'+$P(j.tarifa)+'</span></div>';
+  }).join('');
+
+  var html =
+    '<div class="fact-wrap">'+
+    '<div class="fact-header">'+
+      '<div class="fact-badge">'+cli.slice(0,3)+'</div>'+
+      '<div>'+
+        '<div style="font-size:18px;font-weight:700">'+cli+'</div>'+
+        '<div style="font-size:11px;color:var(--t3)">'+MESES[mes]+' 2026 · División Juveniles</div>'+
+      '</div>'+
+      '<div class="fact-total">'+$P(total)+'</div>'+
+    '</div>'+
+    '<div class="fact-body">'+
+    (films.length?
+      '<div class="fact-section">'+
+        '<div class="fact-sec-title">'+
+          '<span class="fact-sec-lbl" style="background:rgba(74,158,255,.15);color:#4a9eff">Filmación</span>'+
+          '<span style="font-size:11px;color:var(--t3)">× '+films.length+'</span>'+
+          '<span class="fact-sec-sub">'+$P(films.reduce(function(s,j){return s+(j.tarifa||0);},0))+'</span>'+
+        '</div>'+filmRows+'</div>':'')+
+    (anals.length?
+      '<div class="fact-section">'+
+        '<div class="fact-sec-title">'+
+          '<span class="fact-sec-lbl" style="background:rgba(93,202,159,.15);color:#5dca9f">Análisis</span>'+
+          '<span style="font-size:11px;color:var(--t3)">× '+anals.length+'</span>'+
+          '<span class="fact-sec-sub">'+$P(anals.reduce(function(s,j){return s+(j.tarifa||0);},0))+'</span>'+
+        '</div>'+analRows+'</div>':'')+
+    (!films.length&&!anals.length?'<div class="empty">Sin trabajos registrados para '+cli+' en '+MESES[mes]+'</div>':'')+
+    '</div>'+
+    '<div class="fact-footer">'+
+      '<div style="flex:1">'+
+        '<div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px">Total</div>'+
+        '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:26px;letter-spacing:1px;color:#c084fc">'+$P(total)+'</div>'+
+      '</div>'+
+      '<button class="btn-pdf" onclick="imprimirFactura(\''+cli+'\')">🖨 Imprimir factura</button>'+
+    '</div>'+
+    '</div>';
+
+  document.getElementById('fact-preview').innerHTML = html;
+}
+
+function imprimirFactura(cli) {
+  var d = getMes(mes);
+  var films = d.film.filter(function(j){return j.cli===cli;});
+  var anals = d.anal.filter(function(j){return j.cli===cli;});
+  var total = 0;
+  films.forEach(function(j){total+=j.tarifa||0;});
+  anals.forEach(function(j){total+=j.tarifa||0;});
+  var fecha = new Date().toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'});
+  var num = 'JUV-'+cli+'-'+mes+'-2026';
+  var tdS = 'padding:7px 10px;border-bottom:1px solid #f0f0f0;font-size:12px;';
+  var thS = 'padding:6px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#888;border-bottom:1px solid #ddd;text-align:left;';
+
+  function secHtml(items, titulo, color) {
+    if(!items.length) return '';
+    var sub = items.reduce(function(s,j){return s+(j.tarifa||0);},0);
+    return '<div style="margin-bottom:20px">'+
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'+
+        '<span style="background:'+color+'22;color:'+color+';font-size:11px;padding:3px 10px;border-radius:5px;font-weight:700">'+titulo+'</span>'+
+        '<span style="font-size:11px;color:#aaa">× '+items.length+'</span>'+
+        '<span style="margin-left:auto;font-weight:700">'+$P(sub)+'</span>'+
+      '</div>'+
+      '<table style="width:100%;border-collapse:collapse">'+
+        '<thead><tr><th style="'+thS+'">Detalle</th><th style="'+thS+';text-align:right">Valor</th></tr></thead>'+
+        '<tbody>'+items.map(function(j){
+          var det = titulo==='Filmación'
+            ? [(j.cat||''),(j.lugar||''),(j.fecha||'')].filter(Boolean).join(' · ')
+            : [(j.cat||''),(j.local&&j.vis?j.local+' vs '+j.vis:''),(j.fechaP||'')].filter(Boolean).join(' · ');
+          return '<tr><td style="'+tdS+'">'+det+'</td><td style="'+tdS+';text-align:right;font-weight:600">'+$P(j.tarifa)+'</td></tr>';
+        }).join('')+'</tbody></table></div>';
+  }
+
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+    '<title>Dinastia Juveniles · '+cli+' · '+MESES[mes]+' 2026</title>'+
+    '<style>body{font-family:Arial,sans-serif;margin:0;padding:32px 36px;color:#111;font-size:13px;max-width:740px;}'+
+    '@page{size:A4;margin:14mm;}@media print{body{padding:0;max-width:100%;}}</style></head><body>'+
+    // Header
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid #111">'+
+      '<div>'+
+        '<div style="font-size:24px;font-weight:900;letter-spacing:3px">DINASTIA</div>'+
+        '<div style="font-size:11px;color:#888;margin-top:2px">División Juveniles</div>'+
+      '</div>'+
+      '<div style="text-align:right">'+
+        '<div style="font-size:16px;font-weight:800">REPORTE DE TRABAJOS</div>'+
+        '<div style="font-size:11px;color:#888">N° '+num+'</div>'+
+        '<div style="font-size:11px;color:#888">'+fecha+'</div>'+
+      '</div>'+
+    '</div>'+
+    // Cliente
+    '<div style="background:#f5f5f5;border-radius:8px;padding:14px 18px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between">'+
+      '<div>'+
+        '<div style="font-size:20px;font-weight:800">'+cli+'</div>'+
+        '<div style="font-size:12px;color:#888">'+MESES[mes]+' 2026 · Juveniles</div>'+
+      '</div>'+
+      '<div style="font-size:28px;font-weight:900">'+$P(total)+'</div>'+
+    '</div>'+
+    secHtml(films,'Filmación','#4a9eff')+
+    secHtml(anals,'Análisis','#5dca9f')+
+    '<div style="border-top:2px solid #111;padding-top:14px;display:flex;justify-content:space-between;align-items:center;margin-top:16px">'+
+      '<div style="font-size:11px;color:#aaa">Total facturado · '+MESES[mes]+' 2026</div>'+
+      '<div style="font-size:30px;font-weight:900">'+$P(total)+'</div>'+
+    '</div>'+
+    '<div style="margin-top:20px;font-size:10px;color:#ccc;border-top:1px solid #eee;padding-top:10px;text-align:center">DINASTIA · Juveniles · Generado el '+fecha+'</div>'+
+    '</body></html>';
+
+  var win = window.open('','_blank','width=900,height=750');
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  setTimeout(function(){win.print();},400);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+loadAll();
+updateDatalist();
+render();
+</script>
+</body>
+</html>
